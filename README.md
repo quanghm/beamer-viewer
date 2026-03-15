@@ -22,6 +22,15 @@ Automatically splits wide Beamer pages (produced by `\setbeameroption{show notes
 
 ## Install
 
+### Homebrew (recommended)
+
+```bash
+brew tap quanghm/beamer-viewer
+brew install --cask beamer-viewer
+```
+
+### Manual
+
 Download the latest `.app` from [Releases](https://github.com/quanghm/beamer-viewer/releases), unzip, and run:
 
 ```bash
