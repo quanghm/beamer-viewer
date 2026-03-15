@@ -1,0 +1,12 @@
+title: Beamer Viewer
+description: Native macOS/iOS PDF presenter console for Beamer slides
+theme: minima
+url: https://quanghm.github.io
+baseurl: /beamer-viewer
+
+header_pages:
+  - index.md
+  - getting-started.md
+  - key-bindings.md
+  - beamer-setup.md
+  - support.md
