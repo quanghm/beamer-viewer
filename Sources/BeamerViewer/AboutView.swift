@@ -24,6 +24,11 @@ struct AboutView: View {
 
             Divider().padding(.horizontal, 20)
 
+            Link("Online Help", destination: URL(string: "https://quanghm.github.io/beamer-viewer/")!)
+                .font(.callout)
+
+            Divider().padding(.horizontal, 20)
+
             Text("Quang Hoang")
                 .fontWeight(.medium)
             Text("quanghm@gmail.com")

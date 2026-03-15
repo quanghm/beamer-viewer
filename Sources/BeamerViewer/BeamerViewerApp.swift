@@ -49,8 +49,12 @@ struct BeamerViewerApp: App {
             }
             CommandGroup(replacing: .help) {
                 Button("Beamer Viewer Help") {
+                    HelpWindowManager.show()
+                }
+                Button("Key Bindings") {
                     KeyboardManager.shared.toggleKeyBindings()
                 }
+                .keyboardShortcut("h", modifiers: [])
             }
         }
     }
@@ -262,7 +266,8 @@ final class KeyboardManager {
         }
 
         switch event.keyCode {
-        case 53: // Escape — close key bindings, or exit projector fullscreen
+        case 53: // Escape — close help, key bindings, or exit projector fullscreen
+            if HelpWindowManager.closeIfVisible() { return nil }
             if let win = keyBindingsWindow, win.isVisible {
                 win.close()
                 keyBindingsWindow = nil
@@ -303,20 +308,63 @@ final class KeyboardManager {
             return
         }
 
-        let hosting = NSHostingController(rootView: HelpView())
+        let hosting = NSHostingController(rootView: KeyBindingsView())
+        let size = hosting.view.fittingSize
         let win = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: 550, height: 500),
-            styleMask: [.titled, .closable, .resizable, .utilityWindow],
+            contentRect: NSRect(x: 0, y: 0, width: max(size.width, 500), height: max(size.height, 400)),
+            styleMask: [.titled, .closable, .utilityWindow],
             backing: .buffered,
             defer: false
         )
         win.contentViewController = hosting
-        win.title = "Help"
+        win.title = "Key Bindings"
         win.isFloatingPanel = true
         win.becomesKeyOnlyIfNeeded = true
         win.center()
         win.orderFront(nil)
         keyBindingsWindow = win
+    }
+}
+
+// MARK: - Help Window
+
+enum HelpWindowManager {
+    private static var window: NSWindow?
+
+    @discardableResult
+    static func closeIfVisible() -> Bool {
+        if let win = window, win.isVisible {
+            win.orderOut(nil)  // Hide, don't close (avoids deallocation)
+            return true
+        }
+        return false
+    }
+
+    static func show() {
+        // Reuse existing window if still alive
+        if let win = window {
+            if win.isVisible {
+                win.makeKeyAndOrderFront(nil)
+                return
+            }
+            // Window exists but hidden — just show it
+            win.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let hosting = NSHostingController(rootView: HelpView())
+        let win = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: 600, height: 500),
+            styleMask: [.titled, .closable, .resizable],
+            backing: .buffered,
+            defer: false
+        )
+        win.isReleasedWhenClosed = false  // Keep window alive after close
+        win.contentViewController = hosting
+        win.title = "Beamer Viewer Help"
+        win.center()
+        win.makeKeyAndOrderFront(nil)
+        window = win
     }
 }
 
@@ -326,7 +374,7 @@ enum AboutWindowManager {
     private static var window: NSWindow?
 
     static func show() {
-        if let win = window, win.isVisible {
+        if let win = window {
             win.makeKeyAndOrderFront(nil)
             return
         }
@@ -338,6 +386,7 @@ enum AboutWindowManager {
             backing: .buffered,
             defer: false
         )
+        win.isReleasedWhenClosed = false
         win.contentViewController = hosting
         win.title = "About Beamer Viewer"
         win.center()

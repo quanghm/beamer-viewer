@@ -24,6 +24,9 @@ jobs:
         id: version
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
+      - name: Stamp version in Xcode project
+        run: sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.version.outputs.version }};/g" BeamerViewer.xcodeproj/project.pbxproj
+
       - name: Build .app bundle
         run: bash scripts/build-app.sh "${{ steps.version.outputs.version }}"
 

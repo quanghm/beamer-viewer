@@ -9,8 +9,13 @@ Beamer Viewer is a native macOS/iOS PDF presenter console built with SwiftUI and
 
 **Author:** Quang Hoang ([quanghm@gmail.com](mailto:quanghm@gmail.com))
 
+## Sponsor
+
+If you find Beamer Viewer useful, consider [sponsoring the project](https://github.com/sponsors/quanghm).
+
 ## Links
 
+- [Documentation](https://quanghm.github.io/beamer-viewer/) — online help
 - [GitHub Repository](https://github.com/quanghm/beamer-viewer) — source code
 - [Releases](https://github.com/quanghm/beamer-viewer/releases) — download latest version
 - [Report a Bug](https://github.com/quanghm/beamer-viewer/issues) — file an issue
