@@ -9,12 +9,33 @@ final class RecentFiles {
     private(set) var files: [RecentFile] = []
 
     struct RecentFile: Codable, Identifiable {
-        let path: String
         let name: String
         let date: Date
+        let bookmark: Data?  // security-scoped bookmark for iOS
+        let path: String     // display path / macOS direct path
         var id: String { path }
-        var url: URL { URL(fileURLWithPath: path) }
-        var exists: Bool { FileManager.default.fileExists(atPath: path) }
+
+        var url: URL? {
+            #if os(iOS)
+            guard let bookmark else { return nil }
+            var isStale = false
+            guard let url = try? URL(
+                resolvingBookmarkData: bookmark,
+                bookmarkDataIsStale: &isStale
+            ) else { return nil }
+            return url
+            #else
+            return URL(fileURLWithPath: path)
+            #endif
+        }
+
+        var exists: Bool {
+            #if os(iOS)
+            return url != nil
+            #else
+            return FileManager.default.fileExists(atPath: path)
+            #endif
+        }
     }
 
     init() {
@@ -22,10 +43,27 @@ final class RecentFiles {
     }
 
     func add(url: URL) {
-        let file = RecentFile(path: url.path, name: url.lastPathComponent, date: Date())
+        let bookmark: Data?
+        #if os(iOS)
+        bookmark = try? url.bookmarkData()
+        #else
+        bookmark = nil
+        #endif
+
+        let file = RecentFile(
+            name: url.lastPathComponent,
+            date: Date(),
+            bookmark: bookmark,
+            path: url.path
+        )
         files.removeAll { $0.path == file.path }
         files.insert(file, at: 0)
         if files.count > maxCount { files = Array(files.prefix(maxCount)) }
+        save()
+    }
+
+    func removeByPath(_ path: String) {
+        files.removeAll { $0.path == path }
         save()
     }
 
@@ -42,7 +80,11 @@ final class RecentFiles {
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: key),
               let decoded = try? JSONDecoder().decode([RecentFile].self, from: data) else { return }
+        #if os(iOS)
+        files = decoded  // don't filter by exists on iOS — bookmarks resolve lazily
+        #else
         files = decoded.filter { $0.exists }
+        #endif
     }
 
     private func save() {

@@ -326,18 +326,14 @@ struct BeamerViewerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if hasDocument {
-                    PresenterView(manager: manager)
-                        .onAppear {
-                            ExternalDisplayObserver.shared.start(manager: manager)
-                        }
-                } else {
-                    WelcomeView { url in
-                        if manager.load(url: url) {
-                            hasDocument = true
-                        }
-                    }
+            MainView(
+                manager: manager,
+                hasDocument: $hasDocument,
+                onClose: { hasDocument = false }
+            )
+            .onChange(of: hasDocument) { _, newValue in
+                if newValue {
+                    ExternalDisplayObserver.shared.start(manager: manager)
                 }
             }
             .sheet(isPresented: $showKeyBindings) {
