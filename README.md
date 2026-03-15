@@ -112,6 +112,7 @@ All views are SwiftUI and cross-platform (macOS + iOS). Window management and ke
 - [ ] Markdown rendering for notes (rich text, lists, code blocks, emphasis)
 - [ ] Fallback to sidecar notes when split mode is `none` (regular PDFs)
 - [ ] iPad support with external display
+- [ ] Localization (String Catalog)
 
 ## Beamer Setup
 

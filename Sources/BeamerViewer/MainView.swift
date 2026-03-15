@@ -8,11 +8,12 @@ struct MainView: View {
     var manager: SlideManager
     @Binding var hasDocument: Bool
     var projectorManager: ProjectorWindowManager
+    var onClose: (() -> Void)?
 
     var body: some View {
         Group {
             if hasDocument {
-                PresenterView(manager: manager)
+                PresenterView(manager: manager, onClose: onClose)
             } else {
                 WelcomeView { url in
                     openDocument(url: url)

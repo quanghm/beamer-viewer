@@ -3,6 +3,7 @@ import PDFKit
 
 struct PresenterView: View {
     var manager: SlideManager
+    var onClose: (() -> Void)?
     @State private var elapsedSeconds = 0
     @State private var timerRunning = false
     @State private var timerPaused = false
@@ -76,29 +77,28 @@ struct PresenterView: View {
     private var bottomBar: some View {
         HStack {
             Text(timerString)
-                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .font(.system(size: 20, weight: .bold, design: .monospaced))
                 .foregroundStyle(timerPaused ? .black : .black)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
                 .background(
-                    Capsule().fill(timerPaused ? .yellow : .orange)
+                    Capsule().fill(timerPaused ? Color.yellow : Color.accentColor)
                 )
 
-            Spacer()
-
-            #if os(iOS)
-            Button(action: { manager.previous() }) {
-                Image(systemName: "chevron.left").font(.title2)
+            GeometryReader { geo in
+                let progress = manager.pageCount > 1
+                    ? Double(manager.currentIndex) / Double(manager.pageCount - 1)
+                    : 0
+                ZStack(alignment: .leading) {
+                    Capsule()
+                        .fill(.secondary.opacity(0.15))
+                        .frame(height: 4)
+                    Capsule()
+                        .fill(Color.accentColor)
+                        .frame(width: max(4, geo.size.width * progress), height: 4)
+                }
+                .frame(maxHeight: .infinity, alignment: .center)
             }
-            .buttonStyle(.bordered)
-
-            Button(action: { manager.next() }) {
-                Image(systemName: "chevron.right").font(.title2)
-            }
-            .buttonStyle(.bordered)
-
-            Spacer()
-            #endif
 
             Text("\(manager.currentIndex + 1) / \(manager.pageCount)")
                 .font(.system(size: 20, weight: .medium, design: .monospaced))
@@ -108,6 +108,35 @@ struct PresenterView: View {
                 .background(
                     Capsule().strokeBorder(.secondary.opacity(0.3), lineWidth: 1)
                 )
+
+            Button(action: { manager.previous() }) {
+                Image(systemName: "chevron.left")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.accentColor)
+                    .frame(width: 32, height: 32)
+                    .background(Circle().strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+
+            Button(action: { manager.next() }) {
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundColor(.accentColor)
+                    .frame(width: 32, height: 32)
+                    .background(Circle().strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+
+            if let onClose {
+                Button(action: onClose) {
+                    Image(systemName: "xmark")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundStyle(.red)
+                        .frame(width: 32, height: 32)
+                        .background(Circle().strokeBorder(.red.opacity(0.5), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+            }
         }
         .frame(height: 50)
     }

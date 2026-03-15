@@ -14,7 +14,7 @@ struct WelcomeView: View {
             VStack(spacing: 12) {
                 Image(systemName: "doc.richtext")
                     .font(.system(size: 64))
-                    .foregroundStyle(.teal)
+                    .foregroundColor(.accentColor)
                 Text("Beamer Viewer")
                     .font(.largeTitle)
                     .fontWeight(.semibold)
@@ -22,7 +22,6 @@ struct WelcomeView: View {
                     .foregroundStyle(.secondary)
                 Button("Open PDF…") { showFilePicker = true }
                     .buttonStyle(.borderedProminent)
-                    .tint(.teal)
                     .controlSize(.large)
                     .keyboardShortcut("o", modifiers: .command)
                 Text("⌘O")
@@ -51,10 +50,10 @@ struct WelcomeView: View {
                             HStack(spacing: 10) {
                                 Text(hotkeyLabel(for: index))
                                     .font(.system(size: 13, weight: .bold, design: .monospaced))
-                                    .foregroundStyle(.teal)
+                                    .foregroundColor(.accentColor)
                                     .frame(width: 20)
                                 Image(systemName: "doc.fill")
-                                    .foregroundStyle(.teal)
+                                    .foregroundColor(.accentColor)
                                 VStack(alignment: .leading, spacing: 2) {
                                     Text(file.name)
                                         .lineLimit(1)

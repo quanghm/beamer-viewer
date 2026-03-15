@@ -21,7 +21,8 @@ struct BeamerViewerApp: App {
             MainView(
                 manager: manager,
                 hasDocument: $hasDocument,
-                projectorManager: projectorManager
+                projectorManager: projectorManager,
+                onClose: { closePresentation() }
             )
             .onAppear {
                 // Disable window state restoration
