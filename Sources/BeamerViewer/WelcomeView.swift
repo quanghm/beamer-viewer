@@ -4,10 +4,24 @@ struct WelcomeView: View {
     var onOpen: (URL) -> Void
 
     @State private var showFilePicker = false
+    @State private var showHelp = false
     var recentFiles = RecentFiles.shared
 
     var body: some View {
         VStack(spacing: 0) {
+            HStack {
+                Spacer()
+                Button {
+                    showHelp = true
+                } label: {
+                    Image(systemName: "questionmark.circle")
+                        .font(.title2)
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+                .padding()
+            }
+
             Spacer()
 
             // Header
@@ -90,6 +104,23 @@ struct WelcomeView: View {
             if case .success(let urls) = result, let url = urls.first {
                 onOpen(url)
             }
+        }
+        .sheet(isPresented: $showHelp) {
+            #if os(iOS)
+            NavigationStack {
+                HelpView()
+                    .navigationTitle("Help")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button("Done") { showHelp = false }
+                        }
+                    }
+            }
+            #else
+            HelpView()
+                .frame(minWidth: 550, minHeight: 500)
+            #endif
         }
     }
 
