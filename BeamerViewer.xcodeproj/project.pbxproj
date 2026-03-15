@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A1000001 /* BeamerViewerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000001 /* BeamerViewerApp.swift */; };
+		A1000002 /* SlideManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000002 /* SlideManager.swift */; };
+		A1000003 /* SlideView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000003 /* SlideView.swift */; };
+		A1000004 /* PresenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000004 /* PresenterView.swift */; };
+		A1000005 /* ProjectorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000005 /* ProjectorView.swift */; };
+		A1000006 /* WelcomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000006 /* WelcomeView.swift */; };
+		A1000007 /* KeyBindingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000007 /* KeyBindingsView.swift */; };
+		A1000008 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2000008 /* AboutView.swift */; };
+		A100000C /* RecentFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000C /* RecentFiles.swift */; };
+		A100000D /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000D /* MainView.swift */; };
+		A100000E /* HelpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A200000E /* HelpView.swift */; };
+		A1000009 /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = A2000009 /* AppIcon.icns */; };
+		A100000A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A200000B /* Assets.xcassets */; };
+		A100000F /* getting-started.md in Resources */ = {isa = PBXBuildFile; fileRef = A200000F /* getting-started.md */; };
+		A1000010 /* key-bindings.md in Resources */ = {isa = PBXBuildFile; fileRef = A2000010 /* key-bindings.md */; };
+		A1000011 /* beamer-setup.md in Resources */ = {isa = PBXBuildFile; fileRef = A2000011 /* beamer-setup.md */; };
+		A1000012 /* support.md in Resources */ = {isa = PBXBuildFile; fileRef = A2000012 /* support.md */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A2000001 /* BeamerViewerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BeamerViewerApp.swift; sourceTree = "<group>"; };
+		A2000002 /* SlideManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideManager.swift; sourceTree = "<group>"; };
+		A2000003 /* SlideView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideView.swift; sourceTree = "<group>"; };
+		A2000004 /* PresenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresenterView.swift; sourceTree = "<group>"; };
+		A2000005 /* ProjectorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectorView.swift; sourceTree = "<group>"; };
+		A2000006 /* WelcomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeView.swift; sourceTree = "<group>"; };
+		A2000007 /* KeyBindingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyBindingsView.swift; sourceTree = "<group>"; };
+		A2000008 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
+		A200000C /* RecentFiles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentFiles.swift; sourceTree = "<group>"; };
+		A200000D /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		A200000E /* HelpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpView.swift; sourceTree = "<group>"; };
+		A200000F /* getting-started.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "getting-started.md"; sourceTree = "<group>"; };
+		A2000010 /* key-bindings.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "key-bindings.md"; sourceTree = "<group>"; };
+		A2000011 /* beamer-setup.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "beamer-setup.md"; sourceTree = "<group>"; };
+		A2000012 /* support.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = "support.md"; sourceTree = "<group>"; };
+		A2000009 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = SOURCE_ROOT; };
+		A200000B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		A200000A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3000001 /* BeamerViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BeamerViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A4000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A5000001 = {
+			isa = PBXGroup;
+			children = (
+				A5000002 /* Sources */,
+				A5000004 /* docs */,
+				A2000009 /* AppIcon.icns */,
+				A200000B /* Assets.xcassets */,
+				A5000003 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A5000002 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				A2000001 /* BeamerViewerApp.swift */,
+				A2000002 /* SlideManager.swift */,
+				A2000003 /* SlideView.swift */,
+				A2000004 /* PresenterView.swift */,
+				A2000005 /* ProjectorView.swift */,
+				A2000006 /* WelcomeView.swift */,
+		        A2000007 /* KeyBindingsView.swift */,
+				A2000008 /* AboutView.swift */,
+				A200000C /* RecentFiles.swift */,
+				A200000D /* MainView.swift */,
+				A200000E /* HelpView.swift */,
+				A200000A /* Info.plist */,
+			);
+			name = Sources;
+			path = Sources/BeamerViewer;
+			sourceTree = "<group>";
+		};
+		A5000003 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A3000001 /* BeamerViewer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A5000004 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				A200000F /* getting-started.md */,
+				A2000010 /* key-bindings.md */,
+				A2000011 /* beamer-setup.md */,
+				A2000012 /* support.md */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A6000001 /* BeamerViewer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A8000003 /* Build configuration list for PBXNativeTarget "BeamerViewer" */;
+			buildPhases = (
+				A7000001 /* Sources */,
+				A4000001 /* Frameworks */,
+				A7000002 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BeamerViewer;
+			productName = BeamerViewer;
+			productReference = A3000001 /* BeamerViewer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A9000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+			};
+			buildConfigurationList = A8000001 /* Build configuration list for PBXProject "BeamerViewer" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A5000001;
+			productRefGroup = A5000003 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A6000001 /* BeamerViewer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A7000002 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000009 /* AppIcon.icns in Resources */,
+				A100000A /* Assets.xcassets in Resources */,
+				A100000F /* getting-started.md in Resources */,
+				A1000010 /* key-bindings.md in Resources */,
+				A1000011 /* beamer-setup.md in Resources */,
+				A1000012 /* support.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A7000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A1000001 /* BeamerViewerApp.swift in Sources */,
+				A1000002 /* SlideManager.swift in Sources */,
+				A1000003 /* SlideView.swift in Sources */,
+				A1000004 /* PresenterView.swift in Sources */,
+				A1000005 /* ProjectorView.swift in Sources */,
+				A1000006 /* WelcomeView.swift in Sources */,
+				A1000007 /* KeyBindingsView.swift in Sources */,
+				A1000008 /* AboutView.swift in Sources */,
+				A100000C /* RecentFiles.swift in Sources */,
+				A100000D /* MainView.swift in Sources */,
+				A100000E /* HelpView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		A8000002 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		A8000004 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = auto;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		A8000005 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LDQ87F88DZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sources/BeamerViewer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Beamer Viewer";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.0.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quanghm.beamer-viewer";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A8000006 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = LDQ87F88DZ;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Sources/BeamerViewer/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Beamer Viewer";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UIRequiresFullScreen = NO;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight UIInterfaceOrientationPortrait";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 0.0.7;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.quanghm.beamer-viewer";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A8000001 /* Build configuration list for PBXProject "BeamerViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8000002 /* Debug */,
+				A8000004 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A8000003 /* Build configuration list for PBXNativeTarget "BeamerViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A8000005 /* Debug */,
+				A8000006 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A9000001 /* Project object */;
+}
