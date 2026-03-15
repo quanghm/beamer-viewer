@@ -89,25 +89,37 @@ struct PresenterView: View {
                 let progress = manager.pageCount > 1
                     ? Double(manager.currentIndex) / Double(manager.pageCount - 1)
                     : 0
-                ZStack(alignment: .leading) {
-                    Capsule()
-                        .fill(.secondary.opacity(0.15))
-                        .frame(height: 4)
-                    Capsule()
-                        .fill(Color.accentColor)
-                        .frame(width: max(4, geo.size.width * progress), height: 4)
+                ZStack {
+                    // Thin progress bar behind
+                    VStack {
+                        Spacer()
+                        ZStack(alignment: .leading) {
+                            Capsule()
+                                .fill(.secondary.opacity(0.15))
+                                .frame(height: 4)
+                            Capsule()
+                                .fill(Color.accentColor)
+                                .frame(width: max(4, geo.size.width * progress), height: 4)
+                        }
+                        Spacer()
+                    }
+
+                    // Slide counter pill on top, centered on the bar
+                    Text("\(manager.currentIndex + 1) / \(manager.pageCount)")
+                        .font(.system(size: 20, weight: .bold, design: .monospaced))
+                        .foregroundStyle(.primary)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule().fill(.background)
+                                .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
+                        )
+                        .overlay(
+                            Capsule().strokeBorder(.secondary.opacity(0.2), lineWidth: 1)
+                        )
                 }
                 .frame(maxHeight: .infinity, alignment: .center)
             }
-
-            Text("\(manager.currentIndex + 1) / \(manager.pageCount)")
-                .font(.system(size: 20, weight: .medium, design: .monospaced))
-                .foregroundStyle(.secondary)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
-                .background(
-                    Capsule().strokeBorder(.secondary.opacity(0.3), lineWidth: 1)
-                )
 
             Button(action: { manager.previous() }) {
                 Image(systemName: "chevron.left")
