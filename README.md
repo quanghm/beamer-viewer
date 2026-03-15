@@ -6,13 +6,14 @@ Automatically splits wide Beamer pages (produced by `\setbeameroption{show notes
 
 ## Features
 
-- **Presenter window**: current slide, next slide preview, rendered notes, elapsed timer
+- **Presenter window**: current slide, next slide preview, rendered notes, elapsed timer (orange pill)
 - **Projector window**: fullscreen on external display, or windowed on single screen
 - **Beamer page splitting**: auto-detects wide pages and splits slide/notes halves
+- **Welcome screen** with file picker and recent files (hotkeys `1`-`9`, `0`)
 - **Keyboard-driven** navigation with vim-style bindings
 - **Key bindings help overlay** (`h` to toggle, `Esc` to close)
-- **Welcome screen** with file picker (`⌘O`)
 - **Light/dark mode** support — adapts to system appearance
+- **App icon** with dark/light variants
 - **SwiftUI views** — cross-platform, portable to iPad
 
 ## Requirements
@@ -59,6 +60,8 @@ open .build/BeamerViewer.app
 
 ## Key Bindings
 
+### Presenting
+
 | Key | Action |
 |---|---|
 | `→` `↓` `Space` `PgDn` `l` | Next slide |
@@ -72,19 +75,30 @@ open .build/BeamerViewer.app
 | `r` | Reset timer |
 | `f` | Toggle projector fullscreen |
 | `h` | Toggle key bindings help |
+| `⌘W` | Close presentation |
 | `Esc` | Close help / cancel go-to |
 | `q` | Quit |
+
+### Welcome Screen
+
+| Key | Action |
+|---|---|
+| `1`-`9`, `0` | Open recent file (1st through 10th) |
+| `⌘O` | Open file picker |
+| `⌘W` | Quit |
 
 ## Architecture
 
 ```
 Sources/BeamerViewer/
 ├── BeamerViewerApp.swift   # SwiftUI App + AppKit window/keyboard managers (macOS)
+├── MainView.swift          # Persistent container: switches between welcome/presenter
 ├── SlideManager.swift      # @Observable: PDF loading, navigation, split logic
 ├── SlideView.swift         # SwiftUI Canvas: PDF page rendering with crop
 ├── PresenterView.swift     # SwiftUI: current slide, next, notes, timer
 ├── ProjectorView.swift     # SwiftUI: fullscreen slide for projector
-├── WelcomeView.swift       # SwiftUI: file picker landing screen
+├── WelcomeView.swift       # SwiftUI: file picker + recent files
+├── RecentFiles.swift       # LRU cache of 10 recent files (UserDefaults)
 ├── KeyBindingsView.swift   # SwiftUI: help overlay
 ├── AboutView.swift         # SwiftUI: about dialog
 └── Info.plist              # App bundle metadata
@@ -97,7 +111,6 @@ All views are SwiftUI and cross-platform (macOS + iOS). Window management and ke
 - [ ] Sidecar `.notes.md` file support — per-slide Markdown notes rendered in the presenter view
 - [ ] Markdown rendering for notes (rich text, lists, code blocks, emphasis)
 - [ ] Fallback to sidecar notes when split mode is `none` (regular PDFs)
-- [ ] App icon
 - [ ] iPad support with external display
 
 ## Beamer Setup

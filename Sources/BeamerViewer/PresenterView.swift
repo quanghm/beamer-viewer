@@ -31,6 +31,7 @@ struct PresenterView: View {
         }
         .padding(8)
         .onAppear { startTimer() }
+        .onDisappear { stopTimer() }
     }
 
     // MARK: - Subviews
@@ -126,6 +127,12 @@ struct PresenterView: View {
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             elapsedSeconds += 1
         }
+    }
+
+    private func stopTimer() {
+        timer?.invalidate()
+        timer = nil
+        timerRunning = false
     }
 
     func toggleTimer() {

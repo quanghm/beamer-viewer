@@ -1,8 +1,14 @@
 import SwiftUI
 import PDFKit
+import Combine
 
 #if os(macOS)
 import AppKit
+
+extension Notification.Name {
+    static let closePresentation = Notification.Name("closePresentation")
+    static let openRecentFile = Notification.Name("openRecentFile")
+}
 
 @main
 struct BeamerViewerApp: App {
@@ -12,25 +18,24 @@ struct BeamerViewerApp: App {
 
     var body: some Scene {
         WindowGroup {
-            Group {
-                if hasDocument {
-                    PresenterView(manager: manager)
-                        .onAppear {
-                            projectorManager.open(manager: manager)
-                            KeyboardManager.shared.setup(
-                                manager: manager,
-                                projectorManager: projectorManager
-                            )
-                        }
-                } else {
-                    WelcomeView { url in
-                        if manager.load(url: url) {
-                            hasDocument = true
-                        }
-                    }
-                }
+            MainView(
+                manager: manager,
+                hasDocument: $hasDocument,
+                projectorManager: projectorManager
+            )
+            .onAppear {
+                // Disable window state restoration
+                UserDefaults.standard.set(false, forKey: "NSQuitAlwaysKeepsWindows")
+                NSWindow.allowsAutomaticWindowTabbing = false
+                KeyboardManager.shared.setup(
+                    manager: manager,
+                    projectorManager: projectorManager
+                )
+                checkCLIArgs()
             }
-            .onAppear { checkCLIArgs() }
+            .onReceive(NotificationCenter.default.publisher(for: .closePresentation)) { _ in
+                closePresentation()
+            }
         }
         .defaultSize(width: 1200, height: 700)
         .commands {
@@ -59,8 +64,15 @@ struct BeamerViewerApp: App {
                 .appendingPathComponent(path)
         }
         if manager.load(url: url) {
+            RecentFiles.shared.add(url: url)
             hasDocument = true
         }
+    }
+
+    func closePresentation() {
+        projectorManager.hide()
+        manager.reset()
+        hasDocument = false
     }
 }
 
@@ -71,7 +83,10 @@ final class ProjectorWindowManager {
     private var window: NSWindow?
 
     func open(manager: SlideManager) {
-        guard window == nil else { return }
+        if let window {
+            window.orderFront(nil)
+            return
+        }
 
         let projView = ProjectorView(manager: manager)
         let hosting = NSHostingController(rootView: projView)
@@ -88,10 +103,27 @@ final class ProjectorWindowManager {
         win.orderFront(nil)
         window = win
 
-        // Auto-fullscreen on external display
+        // Auto-fullscreen on external display, then move presenter to primary screen
         DispatchQueue.main.async { [weak self] in
-            if NSScreen.screens.count > 1 {
+            let screens = NSScreen.screens
+            if screens.count > 1 {
                 self?.toggleFullscreen()
+                // Move presenter to primary screen if it's on the external display
+                if let mainWindow = NSApp.mainWindow, let primary = screens.first {
+                    let presenterFrame = mainWindow.frame
+                    let primaryFrame = primary.visibleFrame
+                    if !primaryFrame.intersects(presenterFrame) {
+                        // Presenter is on the external screen — move it to primary
+                        mainWindow.setFrame(
+                            NSRect(x: primaryFrame.origin.x + 50,
+                                   y: primaryFrame.origin.y + 50,
+                                   width: min(presenterFrame.width, primaryFrame.width - 100),
+                                   height: min(presenterFrame.height, primaryFrame.height - 100)),
+                            display: true
+                        )
+                    }
+                    mainWindow.makeKeyAndOrderFront(nil)
+                }
             }
         }
     }
@@ -99,6 +131,10 @@ final class ProjectorWindowManager {
     func close() {
         window?.close()
         window = nil
+    }
+
+    func hide() {
+        window?.orderOut(nil)
     }
 
     func toggleFullscreen() {
@@ -127,6 +163,15 @@ final class KeyboardManager {
     private weak var projectorManager: ProjectorWindowManager?
     private var keyBindingsWindow: NSWindow?
 
+    func teardown() {
+        if let monitor { NSEvent.removeMonitor(monitor) }
+        monitor = nil
+        manager = nil
+        projectorManager = nil
+        keyBindingsWindow?.close()
+        keyBindingsWindow = nil
+    }
+
     func setup(manager: SlideManager, projectorManager: ProjectorWindowManager) {
         guard monitor == nil else { return }
         self.manager = manager
@@ -138,6 +183,33 @@ final class KeyboardManager {
     }
 
     private func handleKeyDown(_ event: NSEvent) -> NSEvent? {
+        // ⌘W — close presentation (when presenting), or quit (when on welcome)
+        if event.modifierFlags.contains(.command),
+           event.charactersIgnoringModifiers?.lowercased() == "w" {
+            if manager?.pdfDocument != nil {
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(name: .closePresentation, object: nil)
+                }
+                return nil
+            }
+            // On welcome screen, let ⌘W close the window normally (quits app)
+            return event
+        }
+
+        // When no document is loaded, number keys open recent files
+        if manager?.pdfDocument == nil, let chars = event.characters,
+           "1234567890".contains(chars) {
+            let index = chars == "0" ? 9 : (Int(chars) ?? 1) - 1
+            let files = RecentFiles.shared.files
+            if index < files.count {
+                NotificationCenter.default.post(
+                    name: .openRecentFile,
+                    object: files[index].url
+                )
+            }
+            return nil
+        }
+
         guard let manager else { return event }
 
         if !pendingGoTo.isEmpty {

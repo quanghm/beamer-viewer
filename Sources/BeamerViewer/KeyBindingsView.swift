@@ -13,6 +13,7 @@ struct KeyBindingsView: View {
         ("r", "Reset timer"),
         ("f", "Toggle projector fullscreen"),
         ("h", "Toggle this help"),
+        ("⌘W", "Close presentation"),
         ("Esc", "Close help / cancel go-to"),
         ("q", "Quit"),
     ]

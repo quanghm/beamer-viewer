@@ -14,6 +14,14 @@ final class SlideManager {
 
     // MARK: - Loading
 
+    func reset() {
+        pdfDocument = nil
+        pageCount = 0
+        currentIndex = 0
+        splitMode = .none
+        isBlank = false
+    }
+
     func load(url: URL) -> Bool {
         guard let doc = PDFDocument(url: url) else { return false }
         pdfDocument = doc
