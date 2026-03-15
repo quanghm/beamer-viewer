@@ -31,6 +31,7 @@ struct AboutView: View {
                 .font(.callout)
         }
         .padding(30)
-        .frame(width: 300)
+        .frame(width: 350)
+        .fixedSize(horizontal: false, vertical: true)
     }
 }

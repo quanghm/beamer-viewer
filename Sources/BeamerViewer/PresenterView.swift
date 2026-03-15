@@ -75,8 +75,13 @@ struct PresenterView: View {
     private var bottomBar: some View {
         HStack {
             Text(timerString)
-                .font(.system(size: 36, weight: .medium, design: .monospaced))
-                .foregroundStyle(timerPaused ? .yellow : .primary)
+                .font(.system(size: 28, weight: .bold, design: .monospaced))
+                .foregroundStyle(timerPaused ? .black : .black)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 8)
+                .background(
+                    Capsule().fill(timerPaused ? .yellow : .orange)
+                )
 
             Spacer()
 
@@ -95,8 +100,13 @@ struct PresenterView: View {
             #endif
 
             Text("\(manager.currentIndex + 1) / \(manager.pageCount)")
-                .font(.system(size: 24, design: .monospaced))
+                .font(.system(size: 20, weight: .medium, design: .monospaced))
                 .foregroundStyle(.secondary)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 6)
+                .background(
+                    Capsule().strokeBorder(.secondary.opacity(0.3), lineWidth: 1)
+                )
         }
         .frame(height: 50)
     }

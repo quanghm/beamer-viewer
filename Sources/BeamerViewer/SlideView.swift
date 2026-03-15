@@ -9,7 +9,7 @@ struct SlideView: View {
     var body: some View {
         Canvas { context, size in
             // Background
-            context.fill(Path(CGRect(origin: .zero, size: size)), with: .color(.gray.opacity(0.1)))
+            // Transparent background — inherits from parent
 
             guard let page = pdfPage else { return }
 

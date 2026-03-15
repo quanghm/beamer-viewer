@@ -1,34 +1,44 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-  <rect x="0" y="0" width="512" height="512" rx="120" fill="#111518" />
+  <defs>
+    <filter id="centerShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="14" flood-color="#000000" flood-opacity="0.85"/>
+    </filter>
+  </defs>
 
-  <rect x="64" y="40" width="384" height="10" rx="5" fill="#555555" />
-  <rect x="74" y="50" width="364" height="220" fill="#18A085" />
-  <rect x="130" y="140" width="44" height="100" rx="6" fill="#B2EBF2" opacity="0.8" />
-  <rect x="194" y="90" width="44" height="150" rx="6" fill="#B2EBF2" opacity="0.8" />
-  <rect x="258" y="160" width="44" height="80" rx="6" fill="#B2EBF2" opacity="0.8" />
-  <rect x="322" y="120" width="44" height="120" rx="6" fill="#B2EBF2" opacity="0.8" />
+  <rect x="0" y="0" width="512" height="512" rx="110" fill="#0F1215" />
 
-  <rect x="32" y="190" width="448" height="260" rx="16" fill="#222222" stroke="#444444" stroke-width="4" />
-  <rect x="42" y="200" width="428" height="240" fill="#0A0A0A" />
+  <g opacity="0.95">
+    <rect x="56" y="40" width="400" height="12" rx="6" fill="#37474F" />
+    <rect x="66" y="52" width="380" height="260" fill="#148F77" />
 
-  <rect x="54" y="212" width="200" height="168" rx="8" fill="#18A085" />
-  <rect x="80" y="290" width="30" height="60" rx="4" fill="#B2EBF2" />
-  <rect x="126" y="240" width="30" height="110" rx="4" fill="#B2EBF2" />
-  <rect x="172" y="310" width="30" height="40" rx="4" fill="#B2EBF2" />
+    <rect x="150" y="170" width="60" height="100" rx="6" fill="#B2EBF2" opacity="0.4" />
+    <rect x="250" y="100" width="60" height="170" rx="6" fill="#B2EBF2" opacity="0.4" />
+  </g>
 
-  <rect x="266" y="212" width="192" height="80" rx="8" fill="#137A66" />
-  <rect x="282" y="228" width="40" height="48" rx="4" fill="#80CBC4" opacity="0.5" />
-  <rect x="338" y="238" width="90" height="10" rx="5" fill="#80CBC4" opacity="0.5" />
-  <rect x="338" y="258" width="60" height="10" rx="5" fill="#80CBC4" opacity="0.5" />
+  <g filter="url(#centerShadow)">
 
-  <rect x="266" y="300" width="192" height="80" rx="8" fill="#0E5A4A" />
-  <rect x="282" y="318" width="150" height="10" rx="5" fill="#80CBC4" opacity="0.7" />
-  <rect x="282" y="340" width="120" height="10" rx="5" fill="#80CBC4" opacity="0.7" />
-  <rect x="282" y="362" width="80" height="10" rx="5" fill="#80CBC4" opacity="0.7" />
+    <path d="M 126 400 L 126 260 A 12 12 0 0 1 138 248 L 374 248 A 12 12 0 0 1 386 260 L 386 400 Z" fill="#1C2326" stroke="#263238" stroke-width="2" />
+    <path d="M 134 392 L 134 264 A 6 6 0 0 1 140 258 L 372 258 A 6 6 0 0 1 378 264 L 378 392 Z" fill="#050505" />
 
-  <rect x="54" y="398" width="70" height="24" rx="12" fill="#FFC107" />
-  <rect x="136" y="405" width="50" height="10" rx="5" fill="#333333" />
+    <rect x="144" y="268" width="114" height="96" rx="4" fill="#148F77" />
 
-  <rect x="16" y="452" width="480" height="16" rx="8" fill="#888888" />
-  <rect x="216" y="452" width="80" height="6" rx="3" fill="#666666" />
+    <rect x="168" y="318" width="20" height="34" rx="3" fill="#B2EBF2" />
+    <rect x="208" y="284" width="20" height="68" rx="3" fill="#B2EBF2" />
+
+    <rect x="268" y="268" width="100" height="44" rx="3" fill="#0E6251" />
+    <rect x="268" y="320" width="100" height="44" rx="3" fill="#0B4D3F" />
+
+    <rect x="144" y="374" width="46" height="14" rx="7" fill="#FFC107" />
+    <text x="167" y="385" font-family="Menlo, monospace" font-size="9" fill="#000000" text-anchor="middle" font-weight="bold">15:32</text>
+    <text x="330" y="386" font-family="Menlo, monospace" font-size="9" fill="#546E7A" text-anchor="middle">3 / 12</text>
+
+    <rect x="126" y="398" width="260" height="6" fill="#000000" />
+
+    <polygon points="126,404 386,404 436,464 76,464" fill="#78909C" />
+    <polygon points="76,464 436,464 436,476 76,476" fill="#455A64" />
+
+    <polygon points="140,412 372,412 392,442 120,442" fill="#263238" opacity="0.6" />
+    <polygon points="220,446 292,446 298,458 214,458" fill="#455A64" opacity="0.4" />
+
+  </g>
 </svg>

@@ -43,8 +43,8 @@ elif command -v rsvg-convert &>/dev/null && [ -f icon-dark.svg ]; then
     rm -rf "$ICONSET"
 fi
 
-# Remove any existing signature (unsigned is better than untrusted ad-hoc for Gatekeeper)
-codesign --remove-signature "$APP_DIR/Contents/MacOS/BeamerViewer" 2>/dev/null || true
+# Ad-hoc code sign (required for macOS to launch the app)
+codesign --force --deep -s - "$APP_DIR"
 
 echo "Built: $APP_DIR"
 echo "Version: $VERSION"
