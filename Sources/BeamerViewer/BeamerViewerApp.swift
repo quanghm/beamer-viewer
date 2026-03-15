@@ -22,7 +22,8 @@ struct BeamerViewerApp: App {
                 manager: manager,
                 hasDocument: $hasDocument,
                 projectorManager: projectorManager,
-                onClose: { closePresentation() }
+                onClose: { closePresentation() },
+                onToggleFullscreen: { projectorManager.toggleFullscreen() }
             )
             .onAppear {
                 // Disable window state restoration
@@ -82,7 +83,7 @@ struct BeamerViewerApp: App {
 
 @Observable
 final class ProjectorWindowManager {
-    private var window: NSWindow?
+    private(set) var window: NSWindow?
 
     func open(manager: SlideManager) {
         if let window {
@@ -139,19 +140,14 @@ final class ProjectorWindowManager {
         window?.orderOut(nil)
     }
 
+    var isFullscreen: Bool {
+        window?.styleMask.contains(.fullScreen) ?? false
+    }
+
     func toggleFullscreen() {
         guard let win = window else { return }
-        if win.styleMask.contains(.borderless) && win.level == .screenSaver {
-            win.styleMask = [.titled, .closable, .resizable]
-            win.level = .normal
-            win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
-            win.title = "Beamer Viewer — Projector"
-        } else {
-            let screen = NSScreen.screens.count > 1 ? NSScreen.screens[1] : NSScreen.screens[0]
-            win.styleMask = [.borderless]
-            win.level = .screenSaver
-            win.setFrame(screen.frame, display: true)
-        }
+        win.collectionBehavior = [.fullScreenPrimary]
+        win.toggleFullScreen(nil)
     }
 }
 
@@ -231,10 +227,14 @@ final class KeyboardManager {
         }
 
         switch event.keyCode {
-        case 53: // Escape — close key bindings if open
+        case 53: // Escape — close key bindings, or exit projector fullscreen
             if let win = keyBindingsWindow, win.isVisible {
                 win.close()
                 keyBindingsWindow = nil
+                return nil
+            }
+            if projectorManager?.isFullscreen == true {
+                projectorManager?.toggleFullscreen()
                 return nil
             }
             return event

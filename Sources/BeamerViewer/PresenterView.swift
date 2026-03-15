@@ -4,6 +4,7 @@ import PDFKit
 struct PresenterView: View {
     var manager: SlideManager
     var onClose: (() -> Void)?
+    var onToggleFullscreen: (() -> Void)?
     @State private var elapsedSeconds = 0
     @State private var timerRunning = false
     @State private var timerPaused = false
@@ -138,6 +139,17 @@ struct PresenterView: View {
                     .background(Circle().strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1))
             }
             .buttonStyle(.plain)
+
+            if let onToggleFullscreen {
+                Button(action: onToggleFullscreen) {
+                    Image(systemName: "rectangle.inset.filled.and.person.filled")
+                        .font(.system(size: 14, weight: .semibold))
+                        .foregroundColor(.accentColor)
+                        .frame(width: 32, height: 32)
+                        .background(Circle().strokeBorder(Color.accentColor.opacity(0.3), lineWidth: 1))
+                }
+                .buttonStyle(.plain)
+            }
 
             if let onClose {
                 Button(action: onClose) {
