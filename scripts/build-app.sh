@@ -24,7 +24,7 @@ mkdir -p "$APP_DIR/Contents/Resources"
 cp "$BINARY" "$APP_DIR/Contents/MacOS/"
 
 # Copy and stamp Info.plist with version
-sed "s/VERSION/${VERSION}/g" Sources/BeamerViewer/Info.plist > "$APP_DIR/Contents/Info.plist"
+sed "s/VERSION/${VERSION}/g" Sources/SideBeam/Info.plist > "$APP_DIR/Contents/Info.plist"
 
 # Create PkgInfo
 echo -n "APPL????" > "$APP_DIR/Contents/PkgInfo"

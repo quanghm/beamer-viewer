@@ -7,7 +7,7 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "SideBeam",
-            path: "Sources/BeamerViewer",
+            path: "Sources/SideBeam",
             exclude: ["Info.plist"]
         ),
     ]

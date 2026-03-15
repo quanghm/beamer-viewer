@@ -25,8 +25,8 @@ jobs:
         run: echo "version=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
 
       - name: Stamp version in Xcode project
-        if: hashFiles('BeamerViewer.xcodeproj/project.pbxproj') != ''
-        run: sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.version.outputs.version }};/g" BeamerViewer.xcodeproj/project.pbxproj
+        if: hashFiles('SideBeam.xcodeproj/project.pbxproj') != ''
+        run: sed -i '' "s/MARKETING_VERSION = .*;/MARKETING_VERSION = ${{ steps.version.outputs.version }};/g" SideBeam.xcodeproj/project.pbxproj
 
       - name: Build .app bundle
         run: bash scripts/build-app.sh "${{ steps.version.outputs.version }}"
