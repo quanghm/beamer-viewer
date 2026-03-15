@@ -106,12 +106,22 @@ Sources/BeamerViewer/
 
 All views are SwiftUI and cross-platform (macOS + iOS). Window management and keyboard handling use AppKit on macOS for reliability.
 
+## iPad Support (beta, `feat/ipad` branch)
+
+- **External display** — auto-detects AirPlay/USB-C connected screens for projector output
+- **Hardware keyboard** — same shortcuts as macOS (arrows, k/l, s, b, h)
+- **Swipe gestures** — swipe left/right to navigate slides
+- **Touch navigation** — prev/next buttons in bottom bar
+- **Close button** — return to welcome screen
+- **Recent files** — persisted with security-scoped bookmarks
+
+Build with Xcode — select iPad target and run (⌘R).
+
 ## TODO
 
 - [ ] Sidecar `.notes.md` file support — per-slide Markdown notes rendered in the presenter view
 - [ ] Markdown rendering for notes (rich text, lists, code blocks, emphasis)
 - [ ] Fallback to sidecar notes when split mode is `none` (regular PDFs)
-- [ ] iPad support with external display
 - [ ] Localization (String Catalog)
 
 ## Beamer Setup
