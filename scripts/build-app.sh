@@ -29,8 +29,22 @@ sed "s/VERSION/${VERSION}/g" Sources/BeamerViewer/Info.plist > "$APP_DIR/Content
 # Create PkgInfo
 echo -n "APPL????" > "$APP_DIR/Contents/PkgInfo"
 
-# Ad-hoc code sign
-codesign --force --deep -s - "$APP_DIR"
+# Copy icon if available
+if [ -f AppIcon.icns ]; then
+    cp AppIcon.icns "$APP_DIR/Contents/Resources/"
+elif command -v rsvg-convert &>/dev/null && [ -f icon-dark.svg ]; then
+    ICONSET="$(pwd)/.build/BeamerViewer.iconset"
+    mkdir -p "$ICONSET"
+    for size in 16 32 128 256 512; do
+        rsvg-convert -w "$size" -h "$size" icon-dark.svg -o "$ICONSET/icon_${size}x${size}.png"
+        rsvg-convert -w "$((size*2))" -h "$((size*2))" icon-dark.svg -o "$ICONSET/icon_${size}x${size}@2x.png"
+    done
+    iconutil -c icns "$ICONSET" -o "$APP_DIR/Contents/Resources/AppIcon.icns"
+    rm -rf "$ICONSET"
+fi
+
+# Remove any existing signature (unsigned is better than untrusted ad-hoc for Gatekeeper)
+codesign --remove-signature "$APP_DIR/Contents/MacOS/BeamerViewer" 2>/dev/null || true
 
 echo "Built: $APP_DIR"
 echo "Version: $VERSION"
