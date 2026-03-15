@@ -23,6 +23,7 @@ final class RecentFiles {
                 resolvingBookmarkData: bookmark,
                 bookmarkDataIsStale: &isStale
             ) else { return nil }
+            // Security scope is needed — SlideManager.load() handles start/stop
             return url
             #else
             return URL(fileURLWithPath: path)
@@ -45,7 +46,9 @@ final class RecentFiles {
     func add(url: URL) {
         let bookmark: Data?
         #if os(iOS)
-        bookmark = try? url.bookmarkData()
+        let accessing = url.startAccessingSecurityScopedResource()
+        bookmark = try? url.bookmarkData(options: .minimalBookmark, includingResourceValuesForKeys: nil, relativeTo: nil)
+        if accessing { url.stopAccessingSecurityScopedResource() }
         #else
         bookmark = nil
         #endif
