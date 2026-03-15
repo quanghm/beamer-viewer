@@ -39,6 +39,11 @@ struct MainView: View {
             if newValue {
                 #if os(macOS)
                 projectorManager.open(manager: manager)
+                if NSScreen.screens.count > 1 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        projectorManager.fullscreenOnScreen(NSScreen.screens[1])
+                    }
+                }
                 #endif
             }
         }

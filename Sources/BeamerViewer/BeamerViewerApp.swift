@@ -48,7 +48,7 @@ struct BeamerViewerApp: App {
                 }
             }
             CommandGroup(replacing: .help) {
-                Button("Key Bindings") {
+                Button("Beamer Viewer Help") {
                     KeyboardManager.shared.toggleKeyBindings()
                 }
             }
@@ -82,11 +82,18 @@ struct BeamerViewerApp: App {
 // MARK: - Projector Window (AppKit, reliable multi-screen)
 
 @Observable
-final class ProjectorWindowManager {
+final class ProjectorWindowManager: NSObject {
     private(set) var window: NSWindow?
 
     func open(manager: SlideManager) {
         if let window {
+            // Reset to windowed state before re-showing
+            if window.styleMask.contains(.borderless) {
+                window.styleMask = [.titled, .closable, .resizable]
+                window.level = .normal
+                window.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
+                window.title = "Beamer Viewer — Projector"
+            }
             window.orderFront(nil)
             return
         }
@@ -106,28 +113,25 @@ final class ProjectorWindowManager {
         win.orderFront(nil)
         window = win
 
-        // Auto-fullscreen on external display, then move presenter to primary screen
-        DispatchQueue.main.async { [weak self] in
-            let screens = NSScreen.screens
-            if screens.count > 1 {
-                self?.toggleFullscreen()
-                // Move presenter to primary screen if it's on the external display
-                if let mainWindow = NSApp.mainWindow, let primary = screens.first {
-                    let presenterFrame = mainWindow.frame
-                    let primaryFrame = primary.visibleFrame
-                    if !primaryFrame.intersects(presenterFrame) {
-                        // Presenter is on the external screen — move it to primary
-                        mainWindow.setFrame(
-                            NSRect(x: primaryFrame.origin.x + 50,
-                                   y: primaryFrame.origin.y + 50,
-                                   width: min(presenterFrame.width, primaryFrame.width - 100),
-                                   height: min(presenterFrame.height, primaryFrame.height - 100)),
-                            display: true
-                        )
-                    }
-                    mainWindow.makeKeyAndOrderFront(nil)
-                }
-            }
+        // Watch for screen changes (disconnect/connect)
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(screensChanged),
+            name: NSApplication.didChangeScreenParametersNotification,
+            object: nil
+        )
+
+    }
+
+    @objc private func screensChanged() {
+        guard let win = window else { return }
+
+        if NSScreen.screens.count <= 1, win.styleMask.contains(.borderless) {
+            // External screen disconnected — exit borderless, become windowed
+            win.styleMask = [.titled, .closable, .resizable]
+            win.level = .normal
+            win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
+            win.title = "Beamer Viewer — Projector"
         }
     }
 
@@ -141,13 +145,44 @@ final class ProjectorWindowManager {
     }
 
     var isFullscreen: Bool {
-        window?.styleMask.contains(.fullScreen) ?? false
+        guard let win = window else { return false }
+        return win.styleMask.contains(.fullScreen) || win.styleMask.contains(.borderless)
+    }
+
+    func fullscreenOnScreen(_ screen: NSScreen) {
+        guard let win = window else { return }
+        win.styleMask = [.borderless]
+        win.level = .normal
+        win.setFrame(screen.frame, display: true)
+        win.orderFront(nil)
+        NSApp.mainWindow?.makeKeyAndOrderFront(nil)
     }
 
     func toggleFullscreen() {
         guard let win = window else { return }
-        win.collectionBehavior = [.fullScreenPrimary]
-        win.toggleFullScreen(nil)
+        let screens = NSScreen.screens
+
+        if win.styleMask.contains(.fullScreen) {
+            // Exit native fullscreen
+            win.toggleFullScreen(nil)
+        } else if win.styleMask.contains(.borderless) {
+            // Exit custom fullscreen
+            win.styleMask = [.titled, .closable, .resizable]
+            win.level = .normal
+            win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
+            win.title = "Beamer Viewer — Projector"
+        } else if screens.count > 1 {
+            // Multi-screen: borderless fullscreen on secondary display
+            let screen = screens[1]
+            win.styleMask = [.borderless]
+            win.level = .normal
+            win.setFrame(screen.frame, display: true)
+            win.orderFront(nil)
+        } else {
+            // Single screen: native macOS fullscreen
+            win.collectionBehavior = [.fullScreenPrimary]
+            win.toggleFullScreen(nil)
+        }
     }
 }
 
@@ -268,16 +303,15 @@ final class KeyboardManager {
             return
         }
 
-        let hosting = NSHostingController(rootView: KeyBindingsView())
-        let size = hosting.view.fittingSize
+        let hosting = NSHostingController(rootView: HelpView())
         let win = NSPanel(
-            contentRect: NSRect(x: 0, y: 0, width: max(size.width, 500), height: max(size.height, 400)),
-            styleMask: [.titled, .closable, .utilityWindow],
+            contentRect: NSRect(x: 0, y: 0, width: 550, height: 500),
+            styleMask: [.titled, .closable, .resizable, .utilityWindow],
             backing: .buffered,
             defer: false
         )
         win.contentViewController = hosting
-        win.title = "Key Bindings"
+        win.title = "Help"
         win.isFloatingPanel = true
         win.becomesKeyOnlyIfNeeded = true
         win.center()
