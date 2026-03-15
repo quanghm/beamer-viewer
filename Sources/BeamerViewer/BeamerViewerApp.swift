@@ -148,44 +148,38 @@ final class ProjectorWindowManager: NSObject {
         window?.orderOut(nil)
     }
 
-    var isFullscreen: Bool {
-        guard let win = window else { return false }
-        return win.styleMask.contains(.fullScreen) || win.styleMask.contains(.borderless)
-    }
+    private var isCustomFullscreen = false
+
+    var isFullscreen: Bool { isCustomFullscreen }
 
     func fullscreenOnScreen(_ screen: NSScreen) {
         guard let win = window else { return }
         win.styleMask = [.borderless]
-        win.level = .normal
+        win.level = .statusBar
         win.setFrame(screen.frame, display: true)
         win.orderFront(nil)
+        isCustomFullscreen = true
+        // Hide menu bar on the projector screen
+        NSApp.presentationOptions = [.autoHideMenuBar, .autoHideDock]
         NSApp.mainWindow?.makeKeyAndOrderFront(nil)
     }
 
     func toggleFullscreen() {
         guard let win = window else { return }
-        let screens = NSScreen.screens
 
-        if win.styleMask.contains(.fullScreen) {
-            // Exit native fullscreen
-            win.toggleFullScreen(nil)
-        } else if win.styleMask.contains(.borderless) {
-            // Exit custom fullscreen
+        if isCustomFullscreen {
+            // Exit fullscreen
             win.styleMask = [.titled, .closable, .resizable]
             win.level = .normal
             win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
             win.title = "Beamer Viewer — Projector"
-        } else if screens.count > 1 {
-            // Multi-screen: borderless fullscreen on secondary display
-            let screen = screens[1]
-            win.styleMask = [.borderless]
-            win.level = .normal
-            win.setFrame(screen.frame, display: true)
-            win.orderFront(nil)
+            isCustomFullscreen = false
+            NSApp.presentationOptions = []
         } else {
-            // Single screen: native macOS fullscreen
-            win.collectionBehavior = [.fullScreenPrimary]
-            win.toggleFullScreen(nil)
+            // Enter fullscreen on the best available screen
+            let screens = NSScreen.screens
+            let target = screens.count > 1 ? screens[1] : screens[0]
+            fullscreenOnScreen(target)
         }
     }
 }
@@ -278,6 +272,7 @@ final class KeyboardManager {
                 return nil
             }
             return event
+        case 48: return nil // Tab — swallow to prevent window focus cycling
         case 124, 125, 49: manager.next(); return nil
         case 123, 126: manager.previous(); return nil
         case 116: manager.previous(); return nil
