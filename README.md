@@ -122,6 +122,7 @@ Build with Xcode — select iPad target and run (⌘R).
 - [ ] Sidecar `.notes.md` file support — per-slide Markdown notes rendered in the presenter view
 - [ ] Markdown rendering for notes (rich text, lists, code blocks, emphasis)
 - [ ] Fallback to sidecar notes when split mode is `none` (regular PDFs)
+- [ ] iPad single-screen mode — toggle between presenter and fullscreen slide view
 - [ ] Localization (String Catalog)
 
 ## Beamer Setup
