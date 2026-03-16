@@ -106,7 +106,7 @@ Sources/SideBeam/
 
 All views are SwiftUI and cross-platform (macOS + iOS). Window management and keyboard handling use AppKit on macOS for reliability.
 
-## iPad Support (beta, `feat/ipad` branch)
+## iPad Support (beta)
 
 - **External display** — auto-detects AirPlay/USB-C connected screens for projector output
 - **Hardware keyboard** — same shortcuts as macOS (arrows, k/l, s, b, h)
