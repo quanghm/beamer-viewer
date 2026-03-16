@@ -1,27 +1,27 @@
 # SideBeam
 
 [![License: BSL 1.1](https://img.shields.io/badge/License-BSL%201.1-blue.svg)](LICENSE)
+[![macOS 14+](https://img.shields.io/badge/macOS-14%2B-blue)](https://github.com/quanghm/sidebeam/releases)
+[![iOS 17+](https://img.shields.io/badge/iOS-17%2B-blue)](https://github.com/quanghm/sidebeam)
 
-Native macOS/iOS PDF presenter console, inspired by [pdfpc](https://pdfpc.github.io/). Built with SwiftUI and PDFKit.
+A native PDF presenter console for macOS and iPad. Dual-screen presentation with speaker notes, timer, and slide preview — like Keynote's presenter display, but for any PDF.
 
-Automatically splits wide Beamer pages (produced by `\setbeameroption{show notes on second screen=right}`) into slide and notes halves.
+Auto-detects LaTeX Beamer slides with embedded notes and splits them automatically.
 
 ## Features
 
-- **Presenter window**: current slide, next slide preview, rendered notes, elapsed timer (orange pill)
-- **Projector window**: fullscreen on external display, or windowed on single screen
-- **Beamer page splitting**: auto-detects wide pages and splits slide/notes halves
-- **Welcome screen** with file picker and recent files (hotkeys `1`-`9`, `0`)
-- **Keyboard-driven** navigation with vim-style bindings
-- **Key bindings help overlay** (`h` to toggle, `Esc` to close)
-- **Light/dark mode** support — adapts to system appearance
-- **App icon** with dark/light variants
-- **SwiftUI views** — cross-platform, portable to iPad
+- **Dual-screen presenting** — slides on the projector, notes + preview on your screen
+- **Slide fullscreen toggle** — switch between full presenter layout and slide-only view
+- **Beamer page splitting** — auto-detects and splits wide pages (slide + notes)
+- **Timer with progress bar** — elapsed time, slide counter, visual progress
+- **Recent files** — quick access from the welcome screen (hotkeys `1`–`9`, `0`)
+- **Keyboard-driven** — vim-style navigation, all actions accessible via keyboard
+- **Light/dark mode** — adapts to system appearance
+- **iPad support** — external display via AirPlay/USB-C, swipe gestures, hardware keyboard
 
-## Requirements
+## Screenshots
 
-- macOS 14+ / iOS 17+
-- Swift 5.9+
+<!-- TODO: Add screenshots of presenter view, projector view, welcome screen -->
 
 ## Install
 
@@ -32,7 +32,7 @@ brew tap quanghm/sidebeam
 brew install --cask sidebeam
 ```
 
-### Manual
+### Manual Download
 
 Download the latest `.app` from [Releases](https://github.com/quanghm/sidebeam/releases), unzip, and run:
 
@@ -40,17 +40,72 @@ Download the latest `.app` from [Releases](https://github.com/quanghm/sidebeam/r
 xattr -cr SideBeam.app   # remove quarantine on first run
 ```
 
-## Build & Run
+## Quick Start
 
-```bash
-swift build
-swift run SideBeam presentation.pdf
+1. Open a PDF — click **Open PDF…** or press `⌘O`
+2. The projector window opens automatically
+3. Press `f` to go fullscreen (projector on external display, slide-only on single screen)
+4. Navigate with **arrow keys**, `Space`, or `k`/`l`
+5. Press `h` for key bindings, `Esc` to exit fullscreen
+
+## Key Bindings
+
+### Presenting
+
+| Key | Action |
+|---|---|
+| `→` `↓` `Space` `l` `PgDn` | Next slide |
+| `←` `↑` `k` `PgUp` | Previous slide |
+| `Home` | First slide |
+| `End` | Last slide |
+| `g` + number + `Enter` | Go to slide |
+| `f` | Toggle slide fullscreen + projector |
+| `s` | Cycle split mode: none / right / left |
+| `b` | Blank/unblank projector |
+| `p` | Pause/resume timer |
+| `r` | Reset timer |
+| `h` | Toggle key bindings |
+| `⌘W` | Close presentation |
+| `Esc` | Exit fullscreen / close help |
+| `q` | Quit |
+
+### Welcome Screen
+
+| Key | Action |
+|---|---|
+| `1`–`9`, `0` | Open recent file |
+| `⌘O` | Open file picker |
+
+## Beamer Setup
+
+SideBeam works with **any PDF**. For LaTeX Beamer presentations with embedded speaker notes, add to your preamble:
+
+```latex
+\usepackage{pgfpages}
+\setbeameroption{show notes on second screen=right}
 ```
 
-Or without arguments to open a file picker:
+SideBeam detects the wide pages automatically. Press `s` to cycle split modes if needed.
+
+## iPad
+
+- **External display** — auto-detects AirPlay/USB-C for projector output
+- **Hardware keyboard** — same shortcuts as macOS
+- **Swipe gestures** — swipe left/right to navigate
+- **Touch controls** — prev/next buttons, close, fullscreen toggle
+- **Slide fullscreen** — toggle between presenter layout and slide-only
+
+Build with Xcode — open `SideBeam.xcodeproj`, select iPad, and run (⌘R).
+
+## Build from Source
+
+Requires macOS 14+ and Swift 5.9+.
 
 ```bash
-swift run SideBeam
+git clone https://github.com/quanghm/sidebeam.git
+cd sidebeam
+swift build
+swift run SideBeam presentation.pdf
 ```
 
 To build a `.app` bundle:
@@ -60,81 +115,24 @@ bash scripts/build-app.sh
 open .build/SideBeam.app
 ```
 
-## Key Bindings
+## Documentation
 
-### Presenting
+Full documentation at [quanghm.github.io/sidebeam](https://quanghm.github.io/sidebeam/)
 
-| Key | Action |
-|---|---|
-| `→` `↓` `Space` `PgDn` `l` | Next slide |
-| `←` `↑` `PgUp` `k` | Previous slide |
-| `Home` | First slide |
-| `End` | Last slide |
-| `g` + number + `Enter` | Go to slide |
-| `s` | Cycle split mode: none / right / left |
-| `b` | Blank/unblank projector |
-| `p` | Pause/resume timer |
-| `r` | Reset timer |
-| `f` | Toggle projector fullscreen |
-| `h` | Toggle key bindings help |
-| `⌘W` | Close presentation |
-| `Esc` | Close help / cancel go-to |
-| `q` | Quit |
+## Roadmap
 
-### Welcome Screen
-
-| Key | Action |
-|---|---|
-| `1`-`9`, `0` | Open recent file (1st through 10th) |
-| `⌘O` | Open file picker |
-| `⌘W` | Quit |
-
-## Architecture
-
-```
-Sources/SideBeam/
-├── SideBeamApp.swift   # SwiftUI App + AppKit window/keyboard managers (macOS)
-├── MainView.swift          # Persistent container: switches between welcome/presenter
-├── SlideManager.swift      # @Observable: PDF loading, navigation, split logic
-├── SlideView.swift         # SwiftUI Canvas: PDF page rendering with crop
-├── PresenterView.swift     # SwiftUI: current slide, next, notes, timer
-├── ProjectorView.swift     # SwiftUI: fullscreen slide for projector
-├── WelcomeView.swift       # SwiftUI: file picker + recent files
-├── RecentFiles.swift       # LRU cache of 10 recent files (UserDefaults)
-├── KeyBindingsView.swift   # SwiftUI: help overlay
-├── AboutView.swift         # SwiftUI: about dialog
-└── Info.plist              # App bundle metadata
-```
-
-All views are SwiftUI and cross-platform (macOS + iOS). Window management and keyboard handling use AppKit on macOS for reliability.
-
-## iPad Support (beta)
-
-- **External display** — auto-detects AirPlay/USB-C connected screens for projector output
-- **Hardware keyboard** — same shortcuts as macOS (arrows, k/l, s, b, h)
-- **Swipe gestures** — swipe left/right to navigate slides
-- **Touch navigation** — prev/next buttons in bottom bar
-- **Close button** — return to welcome screen
-- **Recent files** — persisted with security-scoped bookmarks
-
-Build with Xcode — select iPad target and run (⌘R).
-
-## Roadmap (Pro)
-
-See [SideBeam Pro](https://github.com/quanghm/sidebeam-pro) for premium features:
-- Countdown timer with alerts
-- Sidecar markdown notes
+- Countdown timer with configurable alerts
+- Sidecar markdown notes (`.notes.md`)
 - Cloud integration (Google Drive / OneDrive)
-- Slide annotations
+- Slide annotations / pointer
 - Localization
 
-## Beamer Setup
+## Support
 
-Add to your LaTeX preamble:
+- [Report a bug](https://github.com/quanghm/sidebeam/issues)
+- [Sponsor this project](https://github.com/sponsors/quanghm)
+- Commercial licensing: [quanghm@gmail.com](mailto:quanghm@gmail.com)
 
-```latex
-\usepackage{pgfpages}
-\setbeameroption{show notes on second screen=right}
-```
+## License
 
-This produces wide PDF pages with the slide on the left and notes on the right. SideBeam detects this automatically.
+[Business Source License 1.1](LICENSE) — free to use, view, and modify. Commercial PDF presenter applications require a license. Converts to Apache 2.0 on 2029-03-16.
