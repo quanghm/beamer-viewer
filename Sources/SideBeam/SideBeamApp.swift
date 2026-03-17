@@ -5,11 +5,6 @@ import Combine
 #if os(macOS)
 import AppKit
 
-extension Notification.Name {
-    static let closePresentation = Notification.Name("closePresentation")
-    static let openRecentFile = Notification.Name("openRecentFile")
-}
-
 @main
 struct SideBeamApp: App {
     @State private var manager = SlideManager()
@@ -21,9 +16,16 @@ struct SideBeamApp: App {
             MainView(
                 manager: manager,
                 hasDocument: $hasDocument,
-                projectorManager: projectorManager,
                 onClose: { closePresentation() },
-                onToggleProjector: { projectorManager.toggleFullscreen() }
+                onToggleProjector: { projectorManager.toggleFullscreen() },
+                onDocumentLoaded: {
+                    projectorManager.open(manager: manager)
+                    if NSScreen.screens.count > 1 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            projectorManager.fullscreenOnScreen(NSScreen.screens[1])
+                        }
+                    }
+                }
             )
             .onAppear {
                 // Disable window state restoration
@@ -35,7 +37,7 @@ struct SideBeamApp: App {
                 )
                 checkCLIArgs()
             }
-            .onReceive(NotificationCenter.default.publisher(for: .closePresentation)) { _ in
+            .onReceive(NotificationCenter.default.publisher(for: .sidebeamClosePresentation)) { _ in
                 closePresentation()
             }
         }
@@ -235,7 +237,7 @@ final class KeyboardManager {
            event.charactersIgnoringModifiers?.lowercased() == "w" {
             if manager?.pdfDocument != nil {
                 DispatchQueue.main.async {
-                    NotificationCenter.default.post(name: .closePresentation, object: nil)
+                    NotificationCenter.default.post(name: .sidebeamClosePresentation, object: nil)
                 }
                 return nil
             }
@@ -250,7 +252,7 @@ final class KeyboardManager {
             let files = RecentFiles.shared.files
             if index < files.count {
                 NotificationCenter.default.post(
-                    name: .openRecentFile,
+                    name: .sidebeamOpenRecentFile,
                     object: files[index].url
                 )
             }
