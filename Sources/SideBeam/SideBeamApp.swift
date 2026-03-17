@@ -79,7 +79,7 @@ struct SideBeamApp: App {
     }
 
     func closePresentation() {
-        projectorManager.hide()
+        projectorManager.close()
         manager.reset()
         hasDocument = false
     }
