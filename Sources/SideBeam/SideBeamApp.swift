@@ -17,13 +17,19 @@ struct SideBeamApp: App {
                 manager: manager,
                 hasDocument: $hasDocument,
                 onClose: { closePresentation() },
-                onToggleProjector: { projectorManager.toggleFullscreen() },
+                onShowProjector: {
+                    projectorManager.show()
+                    projectorManager.enterFullscreen()
+                },
+                onHideProjector: {
+                    projectorManager.hideCompletely()
+                },
                 onDocumentLoaded: {
                     projectorManager.open(manager: manager)
-                    if NSScreen.screens.count > 1 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            projectorManager.fullscreenOnScreen(NSScreen.screens[1])
-                        }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                        let screens = NSScreen.screens
+                        let target = screens.count > 1 ? screens[1] : screens[0]
+                        projectorManager.enterFullscreen(on: target)
                     }
                 }
             )
@@ -115,6 +121,7 @@ final class ProjectorWindowManager: NSObject {
         )
         win.title = "SideBeam — Projector"
         win.backgroundColor = .black
+        win.isReleasedWhenClosed = false
         win.contentViewController = hosting
         win.orderFront(nil)
         window = win
@@ -130,14 +137,9 @@ final class ProjectorWindowManager: NSObject {
     }
 
     @objc private func screensChanged() {
-        guard let win = window else { return }
-
-        if NSScreen.screens.count <= 1, win.styleMask.contains(.borderless) {
-            // External screen disconnected — exit borderless, become windowed
-            win.styleMask = [.titled, .closable, .resizable]
-            win.level = .normal
-            win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
-            win.title = "SideBeam — Projector"
+        guard window != nil else { return }
+        if NSScreen.screens.count <= 1, isCustomFullscreen {
+            hideCompletely()
         }
     }
 
@@ -150,54 +152,66 @@ final class ProjectorWindowManager: NSObject {
         window?.orderOut(nil)
     }
 
+    func show() {
+        window?.orderFront(nil)
+    }
+
     private var isCustomFullscreen = false
 
     var isFullscreen: Bool { isCustomFullscreen }
 
-    func fullscreenOnScreen(_ screen: NSScreen) {
+    func enterFullscreen(on screen: NSScreen? = nil) {
         guard let win = window else { return }
-        win.styleMask = [.borderless]
-        win.level = .statusBar
-        win.setFrame(screen.frame, display: true)
-        win.orderFront(nil)
-        isCustomFullscreen = true
-        // Hide menu bar on the projector screen
-        NSApp.presentationOptions = [.autoHideMenuBar, .autoHideDock]
-
-        // Move presenter to primary screen if it's behind the projector
         let screens = NSScreen.screens
-        if let mainWindow = NSApp.mainWindow, let primary = screens.first, screens.count > 1 {
-            let presenterFrame = mainWindow.frame
-            if !primary.visibleFrame.intersects(presenterFrame) {
-                let primaryFrame = primary.visibleFrame
-                mainWindow.setFrame(
-                    NSRect(x: primaryFrame.origin.x + 50,
-                           y: primaryFrame.origin.y + 50,
-                           width: min(presenterFrame.width, primaryFrame.width - 100),
-                           height: min(presenterFrame.height, primaryFrame.height - 100)),
-                    display: true
-                )
-            }
-            mainWindow.makeKeyAndOrderFront(nil)
-        }
-    }
+        let target = screen ?? (screens.count > 1 ? screens[1] : screens[0])
+        let isSingleScreen = screens.count <= 1 || target == screens[0]
 
-    func toggleFullscreen() {
-        guard let win = window else { return }
-
-        if isCustomFullscreen {
-            // Exit fullscreen
+        if isSingleScreen {
             win.styleMask = [.titled, .closable, .resizable]
             win.level = .normal
             win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
             win.title = "SideBeam — Projector"
+            win.orderFront(nil)
+        } else {
+            win.styleMask = [.borderless]
+            win.level = .statusBar
+            win.setFrame(target.frame, display: true)
+            win.orderFront(nil)
+            NSApp.presentationOptions = [.autoHideMenuBar, .autoHideDock]
+        }
+        isCustomFullscreen = true
+
+        DispatchQueue.main.async {
+            NSApp.mainWindow?.makeKeyAndOrderFront(nil)
+        }
+    }
+
+    func exitFullscreen() {
+        guard let win = window else { return }
+        win.styleMask = [.titled, .closable, .resizable]
+        win.level = .normal
+        win.setFrame(NSRect(x: 200, y: 200, width: 800, height: 600), display: true)
+        win.title = "SideBeam — Projector"
+        isCustomFullscreen = false
+        NSApp.presentationOptions = []
+    }
+
+    func hideCompletely() {
+        guard let win = window else { return }
+        if isCustomFullscreen {
+            win.styleMask = [.titled, .closable, .resizable]
+            win.level = .normal
             isCustomFullscreen = false
             NSApp.presentationOptions = []
+        }
+        win.orderOut(nil)
+    }
+
+    func toggleFullscreen() {
+        if isCustomFullscreen {
+            hideCompletely()
         } else {
-            // Enter fullscreen on the best available screen
-            let screens = NSScreen.screens
-            let target = screens.count > 1 ? screens[1] : screens[0]
-            fullscreenOnScreen(target)
+            enterFullscreen()
         }
     }
 }
@@ -309,8 +323,14 @@ final class KeyboardManager {
         case "b": manager.isBlank.toggle(); return nil
         case "s": manager.cycleSplitMode(); return nil
         case "f":
-            manager.isSlideFullscreen.toggle()
-            projectorManager?.toggleFullscreen()
+            manager.cycleViewMode()
+            let needsProjector = (manager.viewMode == .sideBeam || manager.viewMode == .mirror)
+            if needsProjector {
+                projectorManager?.show()
+                projectorManager?.enterFullscreen()
+            } else {
+                projectorManager?.hideCompletely()
+            }
             return nil
         case "q": NSApp.terminate(nil); return nil
         default: return event
